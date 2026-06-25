@@ -1,0 +1,900 @@
+/* ============================================================
+   INSTITUCIÓN EDUCATIVA GUANE — HOJA DE ESTILOS PRINCIPAL
+   Organizado por: Reset > Variables > Utilidades > Componentes > Secciones > Responsive
+   ============================================================ */
+
+/* ---------- 1. RESET BÁSICO ----------
+   Quitamos los márgenes/paddings por defecto del navegador
+   y forzamos box-sizing consistente en todos los elementos. */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* scroll suave al navegar entre anclas (#nosotros, #historia, etc.) */
+  scroll-behavior: smooth;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- 2. VARIABLES DE COLOR Y TIPOGRAFÍA ----------
+   Definimos aquí toda la identidad visual institucional.
+   Si en el futuro cambia un color, solo se edita en un lugar. */
+:root {
+  --color-primario: #1B2A6B;   /* azul marino: header, títulos, botones */
+  --color-primario-dark: #131f4f; /* variante más oscura para hovers */
+  --color-secundario: #5BBF5A; /* verde: acentos, hovers, fondos suaves */
+  --color-secundario-dark: #49a648;
+  --color-blanco: #FFFFFF;
+  --color-texto: #1F1F1F;
+  --color-texto-suave: #555a6e;
+  --color-fondo-alterno: #f4f9f4; /* verde muy claro, para secciones pares */
+  --color-borde: #e3e6ef;
+
+  --fuente-titulos: 'Poppins', sans-serif;
+  --fuente-texto: 'Inter', 'Open Sans', sans-serif;
+
+  --radio-borde: 16px;
+  --sombra-suave: 0 8px 24px rgba(27, 42, 107, 0.08);
+  --sombra-hover: 0 16px 32px rgba(27, 42, 107, 0.14);
+
+  --transicion: 0.3s ease;
+
+  /* Alto del header, usado para compensar el scroll a anclas (scroll-margin-top) */
+  --alto-header: 76px;
+}
+
+body {
+  font-family: var(--fuente-texto);
+  color: var(--color-texto);
+  background: var(--color-blanco);
+  line-height: 1.6;
+  overflow-x: hidden; /* evita scroll horizontal por animaciones de slide */
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fuente-titulos);
+  color: var(--color-primario);
+  line-height: 1.25;
+}
+
+/* Compensa el header sticky al saltar a una sección por ancla */
+section[id] {
+  scroll-margin-top: var(--alto-header);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ---------- 3. UTILIDADES GENERALES ---------- */
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 96px 0;
+}
+
+.section--alt {
+  background: var(--color-fondo-alterno);
+}
+
+.section__title {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.section__lead {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 48px;
+  color: var(--color-texto-suave);
+}
+
+/* Botones reutilizables */
+.btn {
+  display: inline-block;
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 12px 28px;
+  border-radius: 999px;
+  transition: transform var(--transicion), box-shadow var(--transicion), background var(--transicion);
+  cursor: pointer;
+  border: none;
+}
+
+.btn--accent {
+  background: var(--color-secundario);
+  color: var(--color-blanco);
+  box-shadow: 0 8px 20px rgba(91, 191, 90, 0.35);
+}
+
+.btn--accent:hover {
+  background: var(--color-secundario-dark);
+  transform: translateY(-2px);
+}
+
+.btn--lg {
+  padding: 16px 36px;
+  font-size: 1.05rem;
+}
+
+/* ---------- 4. ANIMACIÓN DE SCROLL REVEAL ----------
+   Clase base ".reveal": empieza invisible y desplazada hacia abajo.
+   JS (Intersection Observer) añade ".is-visible" cuando el elemento
+   entra en el viewport, y la transición CSS hace el resto. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Si el usuario prefiere menos movimiento, respetamos esa preferencia
+   y mostramos el contenido sin animación. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   HEADER / NAVEGACIÓN
+   ============================================================ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--alto-header);
+  display: flex;
+  align-items: center;
+  /* Efecto "glass" moderno: fondo semitransparente + blur */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.header__container {
+  width: 100%;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header__logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.header__brand-text {
+  font-family: var(--fuente-titulos);
+  font-weight: 700;
+  color: var(--color-primario);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* En pantallas medianas hacia abajo, el nombre completo ya no cabe
+   en una sola línea junto al menú/CTA, así que lo ocultamos y dejamos
+   solo el logo (el botón hamburguesa y el menú siguen mostrando la
+   navegación completa). */
+@media (max-width: 900px) {
+  .header__brand-text {
+    display: none;
+  }
+}
+
+/* Botón hamburguesa: oculto en desktop, visible en móvil (ver media query) */
+.header__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.header__toggle-bar {
+  width: 100%;
+  height: 3px;
+  background: var(--color-primario);
+  border-radius: 2px;
+  transition: transform var(--transicion), opacity var(--transicion);
+}
+
+/* Cuando el menú está abierto (clase añadida por JS), transformamos
+   las 3 barras en una "X" */
+.header__toggle.is-active .header__toggle-bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.header__toggle.is-active .header__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+.header__toggle.is-active .header__toggle-bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav__list {
+  display: flex;
+  gap: 28px;
+}
+
+.nav__link {
+  font-family: var(--fuente-titulos);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--color-primario);
+  position: relative;
+  padding: 6px 0;
+  transition: color var(--transicion);
+}
+
+/* Subrayado verde animado al hacer hover, look moderno */
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--color-secundario);
+  transition: width var(--transicion);
+}
+
+.nav__link:hover::after {
+  width: 100%;
+}
+
+/* El CTA dentro del nav solo se muestra en móvil (en desktop ya está visible aparte) */
+.nav__cta {
+  display: none;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(160deg, var(--color-primario) 0%, var(--color-primario-dark) 100%);
+  overflow: hidden;
+  padding: 0 24px;
+}
+
+/* Logo institucional gigante de fondo, muy traslúcido, solo decorativo */
+.hero__logo-bg {
+  position: absolute;
+  width: 700px;
+  max-width: none;
+  opacity: 0.07;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+
+.hero__eyebrow {
+  color: var(--color-secundario);
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.hero__title {
+  color: var(--color-blanco);
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.hero__subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+  margin-bottom: 36px;
+}
+
+/* Indicador de scroll: pequeño "mouse" animado al pie del hero */
+.hero__scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+}
+
+.hero__scroll-hint span {
+  display: block;
+  width: 4px;
+  height: 8px;
+  background: var(--color-secundario);
+  border-radius: 2px;
+  margin: 8px auto 0;
+  animation: scrollHint 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollHint {
+  0%   { transform: translateY(0); opacity: 1; }
+  70%  { transform: translateY(14px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ============================================================
+   QUIÉNES SOMOS (misión, visión, valores)
+   ============================================================ */
+.mv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 64px;
+}
+
+.mv-card {
+  background: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  padding: 36px;
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.mv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-hover);
+}
+
+.mv-card__title {
+  font-size: 1.4rem;
+  margin-bottom: 14px;
+}
+
+.mv-card p {
+  color: var(--color-texto-suave);
+}
+
+.values__title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 32px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.value-card {
+  text-align: center;
+  background: var(--color-fondo-alterno);
+  border-radius: var(--radio-borde);
+  padding: 32px 22px;
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.value-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-suave);
+}
+
+.value-card__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  color: var(--color-primario);
+  background: var(--color-blanco);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sombra-suave);
+}
+
+.value-card__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.value-card__title {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+.value-card p {
+  font-size: 0.92rem;
+  color: var(--color-texto-suave);
+}
+
+/* ============================================================
+   NUESTRA HISTORIA (timeline)
+   ============================================================ */
+.history__intro {
+  max-width: 760px;
+  margin: 0 auto 56px;
+  text-align: center;
+  color: var(--color-texto-suave);
+}
+
+.timeline {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  padding-left: 32px;
+  border-left: 3px solid var(--color-secundario);
+}
+
+.timeline__item {
+  position: relative;
+  padding: 0 0 48px 28px;
+}
+
+.timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline__dot {
+  position: absolute;
+  left: -41px;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  background: var(--color-primario);
+  border: 3px solid var(--color-blanco);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--color-secundario);
+}
+
+.timeline__tag {
+  display: inline-block;
+  font-family: var(--fuente-titulos);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-secundario-dark);
+  background: rgba(91, 191, 90, 0.12);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.timeline__title {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.timeline__content p {
+  color: var(--color-texto-suave);
+}
+
+/* ============================================================
+   NIVELES EDUCATIVOS
+   ============================================================ */
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.level-card {
+  background: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  padding: 32px 24px;
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.level-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-hover);
+}
+
+.level-card__icon {
+  width: 52px;
+  height: 52px;
+  color: var(--color-blanco);
+  background: var(--color-primario);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.level-card__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.level-card__title {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.level-card p {
+  font-size: 0.92rem;
+  color: var(--color-texto-suave);
+}
+
+/* ============================================================
+   NUESTRAS SEDES
+   ============================================================ */
+.sites-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.site-card {
+  position: relative;
+  background: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.site-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-hover);
+}
+
+/* Distintivo "Sede Principal", solo en la primera tarjeta */
+.site-card__badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  background: var(--color-secundario);
+  color: var(--color-blanco);
+  font-family: var(--fuente-titulos);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+/* Recuadro gris: placeholder de foto real de la sede */
+.site-card__image {
+  height: 160px;
+  background: #d9dce3;
+  color: #6b7080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 12px;
+}
+
+.site-card__body {
+  padding: 22px;
+}
+
+.site-card__title {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.site-card__note {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+  margin-bottom: 10px;
+}
+
+.site-card__info {
+  font-size: 0.88rem;
+  color: var(--color-texto-suave);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   CIFRAS INSTITUCIONALES
+   ============================================================ */
+.stats {
+  background: var(--color-fondo-alterno);
+  padding: 72px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+.stat__number {
+  display: block;
+  font-family: var(--fuente-titulos);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  color: var(--color-primario);
+}
+
+.stat__number--text {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.stat__label {
+  margin-top: 8px;
+  font-size: 0.92rem;
+  color: var(--color-texto-suave);
+}
+
+/* ============================================================
+   TESTIMONIO
+   ============================================================ */
+.testimonial {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.testimonial__quote {
+  font-family: var(--fuente-titulos);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  font-weight: 500;
+  color: var(--color-primario);
+  position: relative;
+  padding: 0 16px;
+}
+
+.testimonial__quote::before,
+.testimonial__quote::after {
+  color: var(--color-secundario);
+  font-size: 1.4em;
+}
+
+.testimonial__author {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+}
+
+.testimonial__placeholder-note {
+  display: block;
+  font-size: 0.78rem;
+  color: #9a9fb0;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  background: var(--color-primario);
+  color: var(--color-blanco);
+  padding: 64px 0 0;
+}
+
+.footer__container {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 1fr;
+  gap: 40px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer__logo {
+  width: 56px;
+  height: 56px;
+}
+
+.footer__brand-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer__sites {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.footer__site h4 {
+  color: var(--color-blanco);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.footer__site p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer__social h4 {
+  color: var(--color-blanco);
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+
+.footer__social-icons {
+  display: flex;
+  gap: 14px;
+}
+
+.footer__social-link {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: background var(--transicion), transform var(--transicion);
+}
+
+.footer__social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer__social-link:hover {
+  background: var(--color-secundario);
+  transform: translateY(-3px);
+}
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 24px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.footer__policy-link {
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+}
+
+.footer__policy-link:hover {
+  color: var(--color-secundario);
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (hasta 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .values-grid,
+  .levels-grid,
+  .sites-grid,
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer__container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — MÓVIL (hasta 768px)
+   Aquí activamos el menú hamburguesa y apilamos todo a 1 columna.
+   ============================================================ */
+@media (max-width: 768px) {
+  .header__toggle {
+    display: flex;
+  }
+
+  /* El menú se oculta fuera de la pantalla (a la derecha) por defecto
+     y se desliza hacia adentro cuando JS añade la clase .is-open */
+  .nav {
+    position: fixed;
+    top: var(--alto-header);
+    right: 0;
+    height: calc(100vh - var(--alto-header));
+    width: min(78vw, 320px);
+    background: var(--color-blanco);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 32px 28px;
+    gap: 28px;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+    transform: translateX(100%);
+    transition: transform var(--transicion);
+  }
+
+  .nav.is-open {
+    transform: translateX(0);
+  }
+
+  .nav__list {
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .nav__cta {
+    display: inline-block;
+  }
+
+  .mv-grid,
+  .values-grid,
+  .levels-grid,
+  .sites-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 64px 0;
+  }
+
+  .timeline {
+    padding-left: 24px;
+  }
+
+  .timeline__dot {
+    left: -33px;
+  }
+}
